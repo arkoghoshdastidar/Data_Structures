@@ -1,4 +1,5 @@
 #include <iostream>
+#include <climits>
 using namespace std;
 
 class Node
@@ -115,6 +116,92 @@ Node *insertNode(Node *root, int data)
             root = RLRotation(root);
         }
         else
+        {
+            root = RRRotation(root);
+        }
+    }
+    return root;
+}
+
+int findMin(Node *root)
+{
+    if (root->lChild == NULL)
+    {
+        return root->data;
+    }
+    return findMin(root->lChild);
+}
+
+Node *deleteNode(Node *root, int data)
+{
+    if (root == NULL)
+    {
+        return root;
+    }
+    else if (root->data == data)
+    {
+        if (!root->lChild && !root->rChild)
+        {
+            delete root;
+            return NULL;
+        }
+        else if (root->lChild && !root->rChild)
+        {
+            Node *child = root->lChild;
+            delete root;
+            return child;
+        }
+        else if (!root->lChild && root->rChild)
+        {
+            Node *child = root->rChild;
+            delete root;
+            return child;
+        }
+        else if(root->lChild && root->rChild)
+        {
+            root->data = findMin(root->rChild);
+            root->rChild = deleteNode(root->rChild, root->data);
+            return root;
+        }
+    }
+    else if (data < root->data)
+    {
+        root->lChild = deleteNode(root->lChild, data);
+    }
+    else if (data > root->data)
+    {
+        root->rChild = deleteNode(root->rChild, data);
+    }
+    root->height = getHeight(root);
+    int balanceFactor = getBalanceFactor(root);
+    if (balanceFactor == 2)
+    {
+        int balanceFactorLeftChild = getBalanceFactor(root->lChild);
+        if (balanceFactorLeftChild == 1)
+        {
+            root = LLRotation(root);
+        }
+        else if (balanceFactorLeftChild == -1)
+        {
+            root = LRRotation(root);
+        }
+        else if (balanceFactorLeftChild == 0)
+        {
+            root = LLRotation(root);
+        }
+    }
+    else if (balanceFactor == -2)
+    {
+        int balanceFactorRightChild = getBalanceFactor(root->rChild);
+        if (balanceFactorRightChild == 1)
+        {
+            root = RLRotation(root);
+        }
+        else if (balanceFactorRightChild == -1)
+        {
+            root = RRRotation(root);
+        }
+        else if (balanceFactorRightChild == 0)
         {
             root = RRRotation(root);
         }

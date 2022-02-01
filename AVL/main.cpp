@@ -29,6 +29,7 @@ int main(void)
     root = insertNode(root, 100);
     root = insertNode(root, 85);
     root = insertNode(root, 35);
+    root = deleteNode(root, 40);
     print2DUtil(root, 0);
     return 0;
 }
